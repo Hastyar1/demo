@@ -1,0 +1,54 @@
+name: Build tweak
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build tweak
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install Theos
+        run: bash -c "$(curl -fsSL 'https://raw.githubusercontent.com/theos/theos/master/bin/install-theos')"
+
+      - name: Setup Theos environment
+        run: echo "THEOS=~/theos" >> $GITHUB_ENV
+
+      - name: Make tweak
+        run: make package
+
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: pain_1.0+debug_arm64.deb
+          path: ./packages/pain_1.0+debug_arm64.deb
+
+      - name: Delete old release
+        uses: dev-drprasad/delete-tag-and-release@v0.2.1
+        with:
+          delete_release: true
+          tag_name: release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: pain_1.0+debug_arm64.deb
+
+      - name: Create new rolling release
+        uses: ncipollo/release-action@v1
+        with:
+          name: Rolling Release
+          body: "This is a parody of flameaway/RemoveConfidential."
+          artifacts: "pain_1.0+debug_arm64.deb"
+          tag: release
+          token: ${{ secrets.GITHUB_TOKEN }}
