@@ -1,0 +1,9 @@
+Package: pin
+Name: demo
+Version: 0.0.1
+Architecture: iphoneos-arm
+Description: An awesome MobileSubstrate tweak!
+Maintainer: paa1n
+Author: paa1n
+Section: Tweaks
+Depends: mobilesubstrate (>= 0.9.5000)
