@@ -1,7 +1,7 @@
 Package: pin
 Name: demo
 Version: 0.0.1
-Architecture: iphoneos-arm
+Architecture: arm64 armv7
 Description: An awesome MobileSubstrate tweak!
 Maintainer: paa1n
 Author: paa1n
